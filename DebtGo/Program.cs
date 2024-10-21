@@ -1,23 +1,56 @@
+using DebtGo.SubscriptionBC.Application.Interfaces;
+using DebtGo.SubscriptionBC.Application.Services;
+using DebtGo.SubscriptionBC.Infrastructure.Data;
+using DebtGo.SubscriptionBC.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+/**
+ * Configures the application services.
+ */
+builder.Services.AddEndpointsApiExplorer(); // Enables endpoint exploration for the API
+builder.Services.AddSwaggerGen(); // Enables Swagger to generate API documentation
 
-var app = builder.Build();
+/**
+ * Configures the database context using SQL Server.
+ */
+builder.Services.AddDbContext<SubscriptionDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configure the HTTP request pipeline.
+/**
+ * Registers repositories and services in the dependency injection container.
+ */
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+
+builder.Services.AddControllersWithViews(); // Adds support for controllers and views
+
+var app = builder.Build(); // Builds the application
+
+/**
+ * Configures the HTTP pipeline of the application.
+ */
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error"); // Handles exceptions in production environments
 }
-app.UseStaticFiles();
+app.UseStaticFiles(); // Enables the use of static files
+app.UseRouting(); // Enables routing for requests
+app.UseAuthorization(); // Enables authorization to protect resources
+app.MapControllers(); // Maps controllers to routes
 
-app.UseRouting();
-
-app.UseAuthorization();
-
+/**
+ * Configures the default route for the application's controllers.
+ */
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Subscription}/{action=GetAll}/{id?}");
 
-app.Run();
+/**
+ * Enables Swagger and the Swagger UI for interactive documentation.
+ */
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.Run(); // Runs the application
