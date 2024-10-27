@@ -1,7 +1,7 @@
 using DebtGo.Shared.Domain.Repositories;
 using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories
+namespace DebtGo.API.Shared.Infrastructure.Persistence.EFC.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
