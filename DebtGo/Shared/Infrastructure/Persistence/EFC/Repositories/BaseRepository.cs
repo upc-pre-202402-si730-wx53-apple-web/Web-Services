@@ -2,7 +2,7 @@ using DebtGo.Shared.Domain.Repositories;
 using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories
+namespace DebtGo.API.Shared.Infrastructure.Persistence.EFC.Repositories
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
