@@ -1,7 +1,7 @@
-using DebtGo.SubscriptionBC.Application.Interfaces;
-using DebtGo.SubscriptionBC.Application.Services;
 using DebtGo.SubscriptionBC.Infrastructure.Data;
 using DebtGo.SubscriptionBC.Infrastructure.Repositories;
+using DebtGo.SubscriptionBC.Domain.Services;
+using DebtGo.SubscriptionBC.Application.Internal;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +22,8 @@ builder.Services.AddDbContext<SubscriptionDbContext>(options =>
  * Registers repositories and services in the dependency injection container.
  */
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
-builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
 
 builder.Services.AddControllersWithViews(); // Adds support for controllers and views
 
@@ -51,6 +52,9 @@ app.MapControllerRoute(
  * Enables Swagger and the Swagger UI for interactive documentation.
  */
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Subscription API v1");
+});
 
 app.Run(); // Runs the application
