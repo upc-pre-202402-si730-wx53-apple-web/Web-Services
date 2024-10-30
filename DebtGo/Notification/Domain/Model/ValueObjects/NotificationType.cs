@@ -7,9 +7,3 @@ public enum NotificationType
     PushNotification
 }
 
-public enum NotificationCategory
-{
-    NewService,
-    Message,
-    SystemAlert
-}
