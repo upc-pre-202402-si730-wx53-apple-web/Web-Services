@@ -8,6 +8,10 @@ using DebtGo.IAM.Infrastructure.Repositories;
 using DebtGo.Shared.Domain.Repositories;
 using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DebtGo.Shared.Interfaces.ASP.Configuration;
+using DebtGo.SubscriptionBC.Infrastructure.Data;
+using DebtGo.SubscriptionBC.Infrastructure.Repositories;
+using DebtGo.SubscriptionBC.Domain.Services;
+using DebtGo.SubscriptionBC.Application.Internal;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +66,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 
+// Subscription Bounded Context Injection Configuration
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
+
 var app = builder.Build();
 
 // Verify Database Objects are created
@@ -85,4 +94,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run(); // Runs the application
