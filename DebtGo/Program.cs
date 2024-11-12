@@ -1,60 +1,126 @@
 using DebtGo.SubscriptionBC.Infrastructure.Data;
-using DebtGo.SubscriptionBC.Infrastructure.Repositories;
-using DebtGo.SubscriptionBC.Domain.Services;
-using DebtGo.SubscriptionBC.Application.Internal;
+using DebtGo2.SubscriptionBC.Domain.Repositories;
+using DebtGo2.SubscriptionBC.Application.Internal.CommandServices;
+using DebtGo2.SubscriptionBC.Application.Internal.QueryServices;
+using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
+using DebtGo2.SubscriptionBC.Interfaces.REST.Transform;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using DebtGo.SubscriptionBC.Domain.Services;
+using DebtGo2.Shared.Domain.Repositories;
+using DebtGo2.Shared.Infrastructure.Persistence.EFC;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/**
- * Configures the application services.
- */
-builder.Services.AddEndpointsApiExplorer(); // Enables endpoint exploration for the API
-builder.Services.AddSwaggerGen(); // Enables Swagger to generate API documentation
+/// <summary>
+///     Configures CORS to allow all origins, headers, and methods.
+/// </summary>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
-/**
- * Configures the database context using SQL Server.
- */
+/// <summary>
+///     Adds controllers to the services collection.
+/// </summary>
+builder.Services.AddControllers();
+
+/// <summary>
+///     Configures API documentation and exploration.
+/// </summary>
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+/// <summary>
+///     Configures the database context for MySQL.
+/// </summary>
 builder.Services.AddDbContext<SubscriptionDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 32)),
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure()
+    ));
 
-/**
- * Registers repositories and services in the dependency injection container.
- */
-builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
-builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
-builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
+/// <summary>
+///     Registers specific repositories and services in the dependency injection container.
+/// </summary>
+builder.Services.AddScoped<DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories.ISubscriptionRepository, SubscriptionRepository>(); // Subscription repository
+builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>(); // Command service
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>(); // Query service
 
-builder.Services.AddControllersWithViews(); // Adds support for controllers and views
+/// <summary>
+///     Registers assemblers for transforming entities to resources and vice versa.
+/// </summary>
+builder.Services.AddScoped<CreateSubscriptionCommandFromResourceAssembler>();
+builder.Services.AddScoped<SubscriptionResourceFromEntityAssembler>();
 
-var app = builder.Build(); // Builds the application
+/// <summary>
+///     Registers shared services in the dependency injection container.
+/// </summary>
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>)); // Generic base repository
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Unit of work for managing transactions
 
-/**
- * Configures the HTTP pipeline of the application.
- */
+/// <summary>
+///     Adds controllers with views to the services collection.
+/// </summary>
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+/// <summary>
+///     Configures the error handling pipeline for non-development environments.
+/// </summary>
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error"); // Handles exceptions in production environments
+    app.UseExceptionHandler("/Home/Error");
 }
-app.UseStaticFiles(); // Enables the use of static files
-app.UseRouting(); // Enables routing for requests
-app.UseAuthorization(); // Enables authorization to protect resources
-app.MapControllers(); // Maps controllers to routes
 
-/**
- * Configures the default route for the application's controllers.
- */
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Subscription}/{action=GetAll}/{id?}");
+/// <summary>
+///     Enables static file serving.
+/// </summary>
+app.UseStaticFiles();
 
-/**
- * Enables Swagger and the Swagger UI for interactive documentation.
- */
+/// <summary>
+///     Configures routing.
+/// </summary>
+app.UseRouting();
+
+/// <summary>
+///     Enforces HTTPS redirection.
+/// </summary>
+app.UseHttpsRedirection();
+
+/// <summary>
+///     Enables the configured CORS policy.
+/// </summary>
+app.UseCors("AllowAll");
+
+/// <summary>
+///     Configures Swagger for API documentation.
+/// </summary>
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Subscription API v1");
 });
 
-app.Run(); // Runs the application
+/// <summary>
+///     Enables authorization middleware.
+/// </summary>
+app.UseAuthorization();
+
+/// <summary>
+///     Maps controller routes.
+/// </summary>
+app.MapControllers();
+
+/// <summary>
+///     Runs the application.
+/// </summary>
+app.Run();
