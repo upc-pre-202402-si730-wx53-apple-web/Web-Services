@@ -1,46 +1,43 @@
-using DebtGo.Notification.Application.Internal.CommandServices;
-using DebtGo.Notification.Application.Internal.QueryServices;
-using DebtGo.Notification.Interfaces.REST.Resources;
-using DebtGo.Notification.Interfaces.REST.Transform;
+using DebtGo.Notification.Domain.Model.Commands;
 using Microsoft.AspNetCore.Mvc;
+using NotificationsBC.Application.Internal.CommandServices;
 
-namespace DebtGo.Notification.Interfaces.REST
+namespace NotificationsBC.Interfaces.REST.Controllers
 {
-    [Route("api/notifications")]
     [ApiController]
+    [Route("api/notifications")]
+    [Produces("application/json")]
     public class NotificationController : ControllerBase
     {
         private readonly NotificationCommandService _commandService;
-        private readonly NotificationQueryService _queryService;
-        private readonly NotificationCommandFromResourceAssembler _commandAssembler;
 
-        public NotificationController(
-            NotificationCommandService commandService,
-            NotificationQueryService queryService,
-            NotificationCommandFromResourceAssembler commandAssembler)
+        public NotificationController(NotificationCommandService commandService)
         {
             _commandService = commandService;
-            _queryService = queryService;
-            _commandAssembler = commandAssembler;
         }
 
+        /// <summary>
+        /// Crea una nueva notificación.
+        /// </summary>
+        /// <param name="resource">Los detalles de la notificación.</param>
+        /// <returns>La notificación creada.</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateNotification([FromBody] CreateNotificationResource resource)
+        public async Task<IActionResult> Create([FromBody] CreateNotificationResource resource)
         {
-            var command = _commandAssembler.ToCommand(resource);
+            var command = new CreateNotificationCommand(resource.Content, resource.Type);
             var result = await _commandService.Handle(command);
-
-            if (result == null) return BadRequest("Failed to create notification");
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetNotification(int id)
-        {
-            var result = await _queryService.GetNotificationById(id);
 
-            if (result == null) return NotFound();
-            return Ok(result);
+        /// <summary>
+        /// Obtiene todas las notificaciones.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            // Lógica de obtención de notificaciones
+            return Ok(new { Message = "Get all notifications" });
         }
     }
 }
