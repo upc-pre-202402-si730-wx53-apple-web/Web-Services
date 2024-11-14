@@ -5,6 +5,8 @@ using DebtGo.IAM.Domain.Repositories;
 using DebtGo.IAM.Domain.Services;
 using DebtGo.IAM.Infrastructure.Hashing.BCrypt.Services;
 using DebtGo.IAM.Infrastructure.Repositories;
+using DebtGo.IAM.Infrastructure.Tokens.JWT.Configuration;
+using DebtGo.IAM.Infrastructure.Tokens.JWT.Services;
 using DebtGo.Shared.Domain.Repositories;
 using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DebtGo.Shared.Interfaces.ASP.Configuration;
@@ -13,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 
 // Configure Lower Case URLs
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -57,10 +58,14 @@ else if (builder.Environment.IsProduction())
 // Shared Bounded Context Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// User Bounded Context Injection Configuration
+// IAM Bounded Context Injection Configuration
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCommandService, UserCommandService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+// TokenSettings Configuration
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 
 var app = builder.Build();
 
