@@ -7,7 +7,11 @@ using DebtGo.Shared.Domain.Repositories;
 
 namespace DebtGo.IAM.Application.Internal.CommandServices
 {
-    public class UserCommandService(IUserRepository userRepository, IHashingService hashingService, IUnitOfWork unitOfWork) : IUserCommandService
+    public class UserCommandService(
+        IUserRepository userRepository,
+        ITokenService tokenService,
+        IHashingService hashingService,
+        IUnitOfWork unitOfWork) : IUserCommandService
     {
         public async Task<User?> Handle(SignUpCommand command)
         {
@@ -27,14 +31,15 @@ namespace DebtGo.IAM.Application.Internal.CommandServices
             return user;
         }
 
-        public async Task<User?> Handle(SignInCommand command)
+        public async Task<(User?, string)> Handle(SignInCommand command)
         {
             var user = await userRepository.FindByEmailAsync(command.Email);
 
             if (user == null || !hashingService.VerifyHash(command.Password, user.Password))
                 throw new Exception("Invalid username or password");
 
-            return user;
+            var token = tokenService.GenerateToken(user);
+            return (user, token);
         }
     }
 }
