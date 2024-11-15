@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using DebtGo.IAM.Domain.Services;
+using DebtGo.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using DebtGo.IAM.Interfaces.REST.Resources;
 using DebtGo.IAM.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace DebtGo.IAM.Interfaces.REST
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -22,6 +24,7 @@ namespace DebtGo.IAM.Interfaces.REST
         [SwaggerResponse(201, "User account created successfully", typeof(UserResource))]
         [SwaggerResponse(400, "Invalid registration details provided.")]
         [SwaggerResponse(500, "Unexpected error while creating user account.")]
+        [AllowAnonymous]
         public async Task<ActionResult> SignUp([FromBody] SignUpResource resource)
         {
             var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -43,6 +46,7 @@ namespace DebtGo.IAM.Interfaces.REST
         [SwaggerResponse(201, "User authenticated successfully", typeof(AuthenticatedUserResource))]
         [SwaggerResponse(400, "Invalid login credentials.")]
         [SwaggerResponse(500, "Unexpected error during authentication.")]
+        [AllowAnonymous]
         public async Task<ActionResult> SignIn([FromBody] SignInResource resource)
         {
             var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(resource);
