@@ -1,6 +1,8 @@
 using DebtGo.SubscriptionBC.Interface.Resources;
 using DebtGo.SubscriptionBC.Domain.Services;
 using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
+using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
+using DebtGo2.SubscriptionBC.Domain.Model.Queries;
 
 namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
 {
@@ -55,6 +57,19 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
                 EndDate = s.EndDate,
                 Status = s.Status.ToString()
             }).ToList();
+        }
+
+        public async Task<Subscription> Handle(GetSubscriptionByUserIdQuery query)
+        {
+            var subscription = await _repository.GetAllAsync();
+            var result = subscription.FirstOrDefault(s => s.UserId == query.UserId);
+
+            if (result == null)
+            {
+                throw new KeyNotFoundException($"Subscription not found for UserId: {query.UserId}");
+            }
+
+            return result;
         }
     }
 }
