@@ -1,3 +1,5 @@
+using DebtGo2.SubscriptionBC.Interfaces.REST.Resources;
+
 namespace DebtGo2.SubscriptionBC.Domain.Model.Commands
 {
     /// <summary>
@@ -5,29 +7,43 @@ namespace DebtGo2.SubscriptionBC.Domain.Model.Commands
     /// </summary>
     public class CreateSubscriptionCommand
     {
-        /// <summary>
-        ///     Unique identifier of the user associated with the subscription.
-        /// </summary>
-        public string UserId { get; set; }
+        private string planName;
+        private DateTime? endDate;
 
-        /// <summary>
-        ///     Name of the subscription plan.
-        /// </summary>
-        public string PlanName { get; set; }
+        public string UserId { get; }
+        public string PlanId { get; }
+        public DateTime StartDate { get; }
+        public DateTime EndDate { get; }
+        public string Status { get; }
 
-        /// <summary>
-        ///     Start date of the subscription.
-        /// </summary>
-        public DateTime StartDate { get; set; }
+        public CreateSubscriptionCommand(string userId, string planId, DateTime startDate, DateTime endDate, string status)
+        {
+            UserId = userId;
+            PlanId = planId;
+            StartDate = startDate;
+            EndDate = endDate;
+            Status = status;
+        }
 
-        /// <summary>
-        ///     End date of the subscription, if applicable.
-        /// </summary>
-        public DateTime? EndDate { get; set; }
+        public CreateSubscriptionCommand(string userId, string planName, DateTime startDate, DateTime? endDate, string status)
+        {
+            UserId = userId;
+            this.planName = planName;
+            StartDate = startDate;
+            this.endDate = endDate;
+            Status = status;
+        }
 
-        /// <summary>
-        ///     Current status of the subscription.
-        /// </summary>
-        public string Status { get; set; }
+        public CreateSubscriptionCommand ToCommand(CreateSubscriptionResource resource)
+        {
+            return new CreateSubscriptionCommand(
+                resource.UserId,
+                resource.PlanName,
+                resource.StartDate,
+                resource.EndDate,
+                resource.Status
+            );
+        }
+
     }
 }
