@@ -1,7 +1,6 @@
 using DebtGo.SubscriptionBC.Infrastructure.Data;
 using DebtGo2.SubscriptionBC.Domain.Repositories;
 using DebtGo2.SubscriptionBC.Application.Internal.CommandServices;
-using DebtGo2.SubscriptionBC.Application.Internal.QueryServices;
 using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
 using DebtGo2.SubscriptionBC.Interfaces.REST.Transform;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using DebtGo.SubscriptionBC.Domain.Services;
 using DebtGo2.Shared.Domain.Repositories;
 using DebtGo2.Shared.Infrastructure.Persistence.EFC;
+using DebtGo2.SubscriptionBC.Application.Internal.QueryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,8 +51,9 @@ builder.Services.AddDbContext<SubscriptionDbContext>(options =>
 ///     Registers specific repositories and services in the dependency injection container.
 /// </summary>
 builder.Services.AddScoped<DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories.ISubscriptionRepository, SubscriptionRepository>(); // Subscription repository
-builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>(); // Command service
+builder.Services.AddScoped<ISubscriptionCommandService, DebtGo2.SubscriptionBC.Application.Internal.CommandServices.SubscriptionCommandService>(); // Command service
 builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>(); // Query service
+
 
 /// <summary>
 ///     Registers assemblers for transforming entities to resources and vice versa.
