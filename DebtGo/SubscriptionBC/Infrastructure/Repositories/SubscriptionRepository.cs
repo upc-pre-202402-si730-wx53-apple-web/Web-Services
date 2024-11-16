@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using DebtGo.SubscriptionBC.Domain.Entities;
 using DebtGo.SubscriptionBC.Infrastructure.Data;
+using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 
-namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
+namespace DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories
 {
     /// <summary>
     ///     Implementation of the <see cref="ISubscriptionRepository"/> interface.
@@ -18,7 +18,7 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Initializes a new instance of the <see cref="SubscriptionRepository"/> class.
         /// </summary>
-        /// <param name="context">The database context for accessing subscriptions.</param>
+        /// <param name="context"> The database context for accessing subscriptions.</param>
         public SubscriptionRepository(SubscriptionDbContext context)
         {
             _context = context;
@@ -27,7 +27,7 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Gets a subscription by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the subscription.</param>
+        /// <param name="id"> The unique identifier of the subscription.</param>
         /// <returns>A <see cref="Task{Subscription}"/> representing the asynchronous operation, containing the found subscription.</returns>
         public async Task<Subscription> GetByIdAsync(int id)
         {
@@ -46,18 +46,18 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Adds a new subscription.
         /// </summary>
-        /// <param name="subscription">The subscription to add.</param>
+        /// <param name="subscription"> The subscription to add.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task AddAsync(Subscription subscription)
         {
             await _context.Subscriptions.AddAsync(subscription);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Esto asegurará que el ID se genera en la base de datos.
         }
 
         /// <summary>
         ///     Updates an existing subscription.
         /// </summary>
-        /// <param name="subscription">The subscription with updated information.</param>
+        /// <param name="subscription"> The subscription with updated information.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task UpdateAsync(Subscription subscription)
         {
@@ -68,7 +68,7 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Deletes a subscription by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the subscription to delete.</param>
+        /// <param name="id"> The unique identifier of the subscription to delete.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DeleteAsync(int id)
         {
