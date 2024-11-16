@@ -1,4 +1,4 @@
-namespace DebtGo.SubscriptionBC.Domain.Enums
+namespace DebtGo2.SubscriptionBC.Domain.Model.Enums
 {
     /// <summary>
     ///     Represents the different statuses a subscription can have.
