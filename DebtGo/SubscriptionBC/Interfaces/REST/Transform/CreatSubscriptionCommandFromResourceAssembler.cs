@@ -13,16 +13,5 @@ namespace DebtGo2.SubscriptionBC.Interfaces.REST.Transform
         /// </summary>
         /// <param name="resource"> The subscription resource.</param>
         /// <returns> A <see cref="CreateSubscriptionCommand"/> object.</returns>
-        public CreateSubscriptionCommand ToCommand(CreateSubscriptionResource resource)
-        {
-            return new CreateSubscriptionCommand
-            {
-                UserId = resource.UserId,
-                PlanName = resource.PlanName,
-                StartDate = resource.StartDate,
-                EndDate = resource.EndDate,
-                Status = resource.Status
-            };
-        }
     }
 }
