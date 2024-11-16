@@ -1,6 +1,6 @@
-using DebtGo.SubscriptionBC.Domain.Entities;
+using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 
-namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
+namespace DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories
 {
     /// <summary>
     ///     Interface for the Subscription repository.
@@ -14,7 +14,7 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Gets a subscription by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the subscription.</param>
+        /// <param name="id"> The unique identifier of the subscription.</param>
         /// <returns>A <see cref="Task{Subscription}"/> representing the asynchronous operation, containing the found subscription.</returns>
         Task<Subscription> GetByIdAsync(int id);
 
@@ -27,21 +27,21 @@ namespace DebtGo.SubscriptionBC.Infrastructure.Repositories
         /// <summary>
         ///     Adds a new subscription.
         /// </summary>
-        /// <param name="subscription">The subscription to add.</param>
+        /// <param name="subscription"> The subscription to add.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddAsync(Subscription subscription);
 
         /// <summary>
         ///     Updates an existing subscription.
         /// </summary>
-        /// <param name="subscription">The subscription with updated information.</param>
+        /// <param name="subscription"> The subscription with updated information.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task UpdateAsync(Subscription subscription);
 
         /// <summary>
         ///     Deletes a subscription by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the subscription to delete.</param>
+        /// <param name="id"> The unique identifier of the subscription to delete.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task DeleteAsync(int id);
     }
