@@ -4,6 +4,7 @@ using DebtGo2.SubscriptionBC.Domain.Model.Enums;
 using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
 using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 using DebtGo2.SubscriptionBC.Domain.Model.Events;
+using DebtGo2.SubscriptionBC.Domain.Model.Commands;
 
 namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
 {
@@ -76,6 +77,25 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
         {
             await _repository.DeleteAsync(id);
         }
+
+        public async Task<Subscription> Handle(CreateSubscriptionCommand command)
+        {
+            if (!Enum.TryParse<SubscriptionStatus>(command.Status, out var status))
+            {
+                throw new ArgumentException($"Invalid status value: {command.Status}");
+            }
+
+            var subscription = new Subscription
+            {
+                UserId = command.UserId,
+                PlanName = command.PlanId,
+                StartDate = command.StartDate,
+                EndDate = command.EndDate,
+                Status = status
+            };
+
+            await _repository.AddAsync(subscription);
+            return subscription; // Retorna la entidad completa
+        }
     }
 }
-
