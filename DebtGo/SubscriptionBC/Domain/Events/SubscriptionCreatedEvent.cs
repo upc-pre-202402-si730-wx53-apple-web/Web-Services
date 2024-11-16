@@ -1,4 +1,4 @@
-namespace DebtGo.SubscriptionBC.Domain.Events
+namespace DebtGo2.SubscriptionBC.Domain.Model.Events
 {
     /// <summary>
     ///     Represents an event that occurs when a new subscription is created.
@@ -32,10 +32,10 @@ namespace DebtGo.SubscriptionBC.Domain.Events
         /// <summary>
         ///     Initializes a new instance of the <see cref="SubscriptionCreatedEvent"/> class.
         /// </summary>
-        /// <param name="subscriptionId">The unique identifier of the subscription.</param>
-        /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="planName">The name of the subscription plan.</param>
-        /// <param name="startDate">The start date of the subscription.</param>
+        /// <param name="subscriptionId"> The unique identifier of the subscription.</param>
+        /// <param name="userId"> The unique identifier of the user.</param>
+        /// <param name="planName"> The name of the subscription plan.</param>
+        /// <param name="startDate"> The start date of the subscription.</param>
         public SubscriptionCreatedEvent(int subscriptionId, string userId, string planName, DateTime startDate)
         {
             SubscriptionId = subscriptionId;
