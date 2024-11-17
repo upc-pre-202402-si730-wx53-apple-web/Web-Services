@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 using DebtGo.Notification.Domain.Model.Aggregates;
 
 namespace NotificationsBC.Interfaces.REST.Transform;
@@ -22,6 +23,8 @@ public class NotificationResourceFromEntityAssembler
     {
         return notifications.Select(ToResource);
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 using DebtGo.Notification.Interfaces.REST.Resources;
 
@@ -62,6 +65,9 @@ public class NotificationResourceFromEntityAssembler
     {
         return notifications.Select(ToResource);
 >>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 }

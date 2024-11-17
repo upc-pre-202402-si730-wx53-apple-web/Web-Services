@@ -1,8 +1,14 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 using DebtGo.Shared.Domain.Repositories;
 using NotificationAgg = DebtGo.Notification.Domain.Model.Aggregates.Notification;
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 using DebtGo.Notification.Domain.Model.Aggregates;
@@ -15,6 +21,7 @@ namespace NotificationsBC.Application.Internal.CommandServices;
 public class NotificationCommandService : INotificationCommandService
 {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private readonly INotificationRepository _notificationRepository;
 
     public NotificationCommandService(INotificationRepository notificationRepository)
@@ -23,6 +30,11 @@ public class NotificationCommandService : INotificationCommandService
 <<<<<<< HEAD
     public async Task<NotificationAgg?> Handle(CreateNotificationCommand command)
     {
+=======
+<<<<<<< HEAD
+    public async Task<NotificationAgg?> Handle(CreateNotificationCommand command)
+    {
+>>>>>>> Stashed changes
         var notification = new NotificationAgg(command);
         try
         {
@@ -40,6 +52,9 @@ public class NotificationCommandService : INotificationCommandService
 
     public NotificationCommandService(INotificationRepository notificationRepository)
     {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         _notificationRepository = notificationRepository;
     }
@@ -55,6 +70,10 @@ public class NotificationCommandService : INotificationCommandService
     {
         throw new NotImplementedException();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
+>>>>>>> Stashed changes
 =======
 >>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
 >>>>>>> Stashed changes

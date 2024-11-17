@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 using DebtGo.Notification.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using DebtGo.Notification.Infrastructure.Persistence.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 using DebtGo.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 using DebtGo.Notification.Application.Internal.CommandServices;
@@ -114,6 +117,9 @@ using DebtGo.Notification.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 // Configurar DbContext para usar MySQL
 builder.Services.AddDbContext<NotificationDbContext>(options =>
@@ -148,6 +154,10 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
+>>>>>>> Stashed changes
 =======
 >>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
 >>>>>>> Stashed changes
@@ -158,6 +168,11 @@ app.MapControllers();
 <<<<<<< HEAD
 app.Run();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+app.Run();
+>>>>>>> Stashed changes
 =======
 =======
 app.Run();
@@ -177,6 +192,10 @@ public class KebabCaseRouteNamingConvention : IOutboundParameterTransformer
     }
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
+>>>>>>> Stashed changes
 =======
 >>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
 >>>>>>> Stashed changes
