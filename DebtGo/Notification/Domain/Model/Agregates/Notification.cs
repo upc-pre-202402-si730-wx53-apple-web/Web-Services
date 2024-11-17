@@ -1,5 +1,6 @@
 using DebtGo.Notification.Domain.Model.Commands;
 using DebtGo.Notification.Domain.Model.ValueObjects;
+using NotificationsBC.Domain.ValueObjects;
 
 namespace DebtGo.Notification.Domain.Model.Aggregates;
 
@@ -7,7 +8,7 @@ public partial class Notification
 {
     public Notification()
     {
-        Content = new NotificationContent();
+        Content = new NotificationContent(string.Empty);
         //Content = string.Empty;
         Type = NotificationType.Email;
         Status = NotificationStatus.Pending;
@@ -26,12 +27,9 @@ public partial class Notification
         Content = new NotificationContent(command.Content);
         //Content = command.Content;
 
-        if (!Enum.IsDefined(typeof(NotificationType), command.Type))
-            throw new Exception("Status must be a valid value (Email, SMS, PushNotification).");
-
         switch (command.Type)
         {
-            case "Email":
+            case "EMAIL":
                 Type = NotificationType.Email;
                 break;
 
@@ -39,7 +37,7 @@ public partial class Notification
                 Type = NotificationType.SMS;
                 break;
 
-            case "PushNotification":
+            case "PUSHNOTIFICATION":
                 Type = NotificationType.PushNotification;
                 break;
 

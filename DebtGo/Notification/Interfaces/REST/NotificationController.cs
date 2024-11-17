@@ -1,95 +1,29 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-using DebtGo.Notification.Domain.Model.Commands;
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
 using System.Net.Mime;
 using DebtGo.Notification.Domain.Services;
 using DebtGo.Notification.Interfaces.REST.Resources;
 using DebtGo.Notification.Interfaces.REST.Transform;
-=======
 using DebtGo.Notification.Domain.Model.Commands;
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 using Microsoft.AspNetCore.Mvc;
 using NotificationsBC.Application.Internal.CommandServices;
+using DebtGo.Notification.Domain.Model.Queries;
 
 namespace NotificationsBC.Interfaces.REST.Controllers
 {
     [ApiController]
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
     [Route("api/v1/[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
     [Tags("Notification")]
     public class NotificationController(INotificationCommandService commandService, INotificationQueryService queryService) : ControllerBase
     {
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    [Route("api/notifications")]
-    [Produces("application/json")]
-    public class NotificationController : ControllerBase
-    {
-        private readonly NotificationCommandService _commandService;
-
-        public NotificationController(NotificationCommandService commandService)
-        {
-            _commandService = commandService;
-<<<<<<< Updated upstream
-        }
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
 
         /// <summary>
-        /// Crea una nueva notificación.
+        /// Crea una nueva notificaciï¿½n.
         /// </summary>
-        /// <param name="resource">Los detalles de la notificación.</param>
-        /// <returns>La notificación creada.</returns>
+        /// <param name="resource">Los detalles de la notificaciï¿½n.</param>
+        /// <returns>La notificaciï¿½n creada.</returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateNotificationResource resource)
         {
-<<<<<<< Updated upstream
-            var command = new CreateNotificationCommand(resource.Content, resource.Type);
-            var result = await _commandService.Handle(command);
-            return Ok(result);
-=======
->>>>>>> Stashed changes
-        }
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
-
-<<<<<<< Updated upstream
-
-        /// <summary>
-        /// Obtiene todas las notificaciones.
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            // Lógica de obtención de notificaciones
-            return Ok(new { Message = "Get all notifications" });
-=======
-=======
-        /// <summary>
-        /// Crea una nueva notificación.
-        /// </summary>
-        /// <param name="resource">Los detalles de la notificación.</param>
-        /// <returns>La notificación creada.</returns>
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateNotificationResource resource)
-        {
->>>>>>> Stashed changes
-<<<<<<< HEAD
             var command = CreateNotificationCommandFromResourceAssembler.ToCommandFromResource(resource);
             var result = await commandService.Handle(command);
 
@@ -111,35 +45,19 @@ namespace NotificationsBC.Interfaces.REST.Controllers
             var notificationResource = NotificationResourceFromEntityAssembler.ToResourceFromEntity(result);
 
             return Ok(notificationResource);
-=======
-            var command = new CreateNotificationCommand(resource.Content, resource.Type);
-            var result = await _commandService.Handle(command);
-            return Ok(result);
->>>>>>> Stashed changes
         }
 
-
-        /// <summary>
-        /// Obtiene todas las notificaciones.
-        /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllNotifications()
         {
-            // Lógica de obtención de notificaciones
-            return Ok(new { Message = "Get all notifications" });
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
-        }
+            var query = new GetAllNotificationsQuery();
+            var result = await queryService.Handle(query);
 
+            if (result == null) return NotFound();
 
-        /// <summary>
-        /// Obtiene todas las notificaciones.
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            // Lógica de obtención de notificaciones
-            return Ok(new { Message = "Get all notifications" });
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
+            var notificationResources = result.Select(NotificationResourceFromEntityAssembler.ToResourceFromEntity);
+
+            return Ok(notificationResources);
         }
     }
 }

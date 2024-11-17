@@ -1,47 +1,11 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-using DebtGo.Notification.Domain.Model.Aggregates;
-
-namespace NotificationsBC.Interfaces.REST.Transform;
-
-public class NotificationResourceFromEntityAssembler
-{
-    public CreateNotificationResource ToResource(Notification notification)
-    {
-        return new CreateNotificationResource
-        {
-            Id = notification.Id,
-            Content = notification.Content,
-            RecipientAddress = notification.RecipientAddress,
-            Type = notification.Type.ToString(),
-            Category = notification.Category.ToString(),
-            CreatedAt = notification.CreatedDate
-        };
-    }
-
-    public IEnumerable<CreateNotificationResource> ToResourceList(IEnumerable<Notification> notifications)
-    {
-        return notifications.Select(ToResource);
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
 using DebtGo.Notification.Interfaces.REST.Resources;
 
 using NotificationAgg = DebtGo.Notification.Domain.Model.Aggregates.Notification;
 
 namespace DebtGo.Notification.Interfaces.REST.Transform
-=======
-using DebtGo.Notification.Domain.Model.Aggregates;
-
-namespace NotificationsBC.Interfaces.REST.Transform;
-
-public class NotificationResourceFromEntityAssembler
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
 {
-    public CreateNotificationResource ToResource(Notification notification)
+    public class NotificationResourceFromEntityAssembler
     {
-<<<<<<< HEAD
         public static NotificationResource ToResourceFromEntity(NotificationAgg entity)
         {
             return new NotificationResource(
@@ -49,25 +13,6 @@ public class NotificationResourceFromEntityAssembler
                 entity.Type.ToString(),
                 entity.Status.ToString());
         }
-=======
-        return new CreateNotificationResource
-        {
-            Id = notification.Id,
-            Content = notification.Content,
-            RecipientAddress = notification.RecipientAddress,
-            Type = notification.Type.ToString(),
-            Category = notification.Category.ToString(),
-            CreatedAt = notification.CreatedDate
-        };
     }
 
-    public IEnumerable<CreateNotificationResource> ToResourceList(IEnumerable<Notification> notifications)
-    {
-        return notifications.Select(ToResource);
->>>>>>> 4a1c21b94a3a9bcb561ee28a24c061c232d90ba0
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    }
 }

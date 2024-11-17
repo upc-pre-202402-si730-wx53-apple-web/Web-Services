@@ -7,15 +7,17 @@ namespace DebtGo.Notification.Interfaces.REST.Transform
     {
         public static CreateNotificationCommand ToCommandFromResource(CreateNotificationResource resource)
         {
-            if (resource.Type.ToUpper() != "EMAIL"
-                || resource.Type.ToUpper() != "SMS"
-                || resource.Type.ToUpper() != "PUSHNOTIFICATION")
-                throw new Exception("Status must be a valid value (Email, SMS, PushNotification).");
+            var type = resource.Type.ToUpper();
+
+            if (!string.Equals(type, "EMAIL")
+                && !string.Equals(type, "SMS")
+                && !string.Equals(type, "PUSHNOTIFICATION"))
+                throw new Exception("Type must be a valid value (Email, SMS, PushNotification).");
 
 
             return new CreateNotificationCommand(
                 resource.Content,
-                resource.Type,
+                type,
                 resource.Category);
         }
     }
