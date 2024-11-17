@@ -14,6 +14,11 @@ using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration;
 using DebtGo.Shared.Interfaces.ASP.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using DebtGo.Notification.Application.Internal.QueryServices;
+using DebtGo.Notification.Domain.Repositories;
+using DebtGo.Notification.Domain.Services;
+using DebtGo.Notification.Infrastructure.Persistence.EFC.Repositories;
+using NotificationsBC.Application.Internal.CommandServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
