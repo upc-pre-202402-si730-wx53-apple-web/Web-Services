@@ -15,15 +15,14 @@ namespace DebtGo2.SubscriptionBC.Interfaces.REST.Transform
         /// <returns> A <see cref="SubscriptionResource"/> object.</returns>
         public SubscriptionResource ToResource(Subscription subscription)
         {
-            return new SubscriptionResource
-            {
-                Id = subscription.Id,
-                UserId = subscription.UserId,
-                PlanName = subscription.PlanName,
-                StartDate = subscription.StartDate,
-                EndDate = subscription.EndDate,
-                Status = subscription.Status.ToString()
-            };
+            return new SubscriptionResource(
+                subscription.Id,
+                subscription.UserId,
+                subscription.PlanName,
+                subscription.StartDate,
+                subscription.EndDate,
+                subscription.Status.ToString()
+            );
         }
     }
 }

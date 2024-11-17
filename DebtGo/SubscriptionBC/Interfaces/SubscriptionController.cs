@@ -1,6 +1,8 @@
 using DebtGo.SubscriptionBC.Interface.Resources;
 using DebtGo.SubscriptionBC.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using DebtGo2.SubscriptionBC.Interfaces.REST.Transform;
+using DebtGo2.SubscriptionBC.Interfaces.REST.Resources;
 
 namespace DebtGo.SubscriptionBC.Interface.Controllers
 {
@@ -9,31 +11,16 @@ namespace DebtGo.SubscriptionBC.Interface.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class SubscriptionController : ControllerBase
+    public class SubscriptionController(ISubscriptionCommandService commandService,
+            ISubscriptionQueryService queryService) : ControllerBase
     {
-        private readonly ISubscriptionCommandService _subscriptionCommandService;
-        private readonly ISubscriptionQueryService _subscriptionQueryService;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="SubscriptionController"/> class.
-        /// </summary>
-        /// <param name="commandService"> The command service for managing subscriptions.</param>
-        /// <param name="queryService"> The query service for fetching subscription data.</param>
-        public SubscriptionController(
-            ISubscriptionCommandService commandService,
-            ISubscriptionQueryService queryService)
-        {
-            _subscriptionCommandService = commandService;
-            _subscriptionQueryService = queryService;
-        }
-
         /// <summary>
         ///     Gets a subscription by its unique identifier.
         /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var subscription = await _subscriptionQueryService.GetSubscriptionByIdAsync(id);
+            var subscription = await queryService.GetSubscriptionByIdAsync(id);
             if (subscription == null) return NotFound();
             return Ok(subscription);
         }
@@ -44,7 +31,7 @@ namespace DebtGo.SubscriptionBC.Interface.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var subscriptions = await _subscriptionQueryService.GetAllSubscriptionsAsync();
+            var subscriptions = await queryService.GetAllSubscriptionsAsync();
             return Ok(subscriptions);
         }
 
@@ -52,21 +39,25 @@ namespace DebtGo.SubscriptionBC.Interface.Controllers
         ///     Creates a new subscription.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SubscriptionDto resources)
+        public async Task<IActionResult> Create([FromBody] CreateSubscriptionResource resources)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await _subscriptionCommandService.CreateSubscriptionAsync(resources);
-            return CreatedAtAction(nameof(GetById), new { id = resources.Id }, resources);
+            var command = CreateSubscriptionCommandFromResourceAssembler.ToCommandFromResource(resources);
+
+            var subscription = await commandService.Handle(command);
+
+            return CreatedAtAction(nameof(Create), subscription);
+            //return CreatedAtAction(nameof(GetById), new { id = resources.Id }, resources);
         }
 
         /// <summary>
         ///     Updates an existing subscription.
         /// </summary>
-        [HttpPut("{id}")]
+        /*   [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] SubscriptionDto resources)
         {
             if (id != resources.Id) return BadRequest();
@@ -76,18 +67,18 @@ namespace DebtGo.SubscriptionBC.Interface.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _subscriptionCommandService.UpdateSubscriptionAsync(resources);
+            await commandService.UpdateSubscriptionAsync(resources);
             return NoContent();
-        }
+        } */
 
         /// <summary>
         ///     Deletes a subscription by its unique identifier.
         /// </summary>
-        [HttpDelete("{id}")]
+        /*   [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _subscriptionCommandService.DeleteSubscriptionAsync(id);
+            await commandService.DeleteSubscriptionAsync(id);
             return NoContent();
-        }
+        } */
     }
 }

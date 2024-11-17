@@ -1,3 +1,4 @@
+using DebtGo2.SubscriptionBC.Domain.Model.Commands;
 using DebtGo2.SubscriptionBC.Domain.Model.Enums;
 
 namespace DebtGo2.SubscriptionBC.Domain.Model.Aggregates
@@ -24,7 +25,7 @@ namespace DebtGo2.SubscriptionBC.Domain.Model.Aggregates
         /// <summary>
         ///     Gets or sets the name of the subscription plan.
         /// </summary>
-        public string PlanName { get; set; }
+        public string? PlanName { get; set; }
 
         /// <summary>
         ///     Gets or sets the start date of the subscription.
@@ -40,5 +41,19 @@ namespace DebtGo2.SubscriptionBC.Domain.Model.Aggregates
         ///     Gets or sets the current status of the subscription.
         /// </summary>
         public SubscriptionStatus Status { get; set; }
+
+        public Subscription()
+        {
+            UserId = string.Empty;
+            PlanName = string.Empty;
+        }
+        public Subscription(CreateSubscriptionCommand command)
+        {
+            UserId = command.UserId;
+            PlanName = command.PlanId;
+            StartDate = command.StartDate;
+            EndDate = command.EndDate;
+            Status = SubscriptionStatus.Active;
+        }
     }
 }

@@ -3,25 +3,15 @@ using DebtGo.SubscriptionBC.Domain.Services;
 using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
 using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 using DebtGo2.SubscriptionBC.Domain.Model.Queries;
+using DebtGo2.SubscriptionBC.Domain.Repositories;
 
 namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
 {
     /// <summary>
     ///     Implements the query service for managing subscriptions.
     /// </summary>
-    public class SubscriptionQueryService : ISubscriptionQueryService
+    public class SubscriptionQueryService(ISubscriptionRepository repository) : ISubscriptionQueryService
     {
-        private readonly ISubscriptionRepository _repository;
-
-        /// <summary>
-        ///     Initializes a new instance of <see cref="SubscriptionQueryService"/>.
-        /// </summary>
-        /// <param name="repository"> The repository used to query subscription data.</param>
-        public SubscriptionQueryService(ISubscriptionRepository repository)
-        {
-            _repository = repository;
-        }
-
         /// <summary>
         ///     Retrieves a subscription by its unique identifier.
         /// </summary>
@@ -29,7 +19,7 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
         /// <returns>A <see cref="SubscriptionDto"/> object containing the subscription details.</returns>
         public async Task<SubscriptionDto?> GetSubscriptionByIdAsync(int id)
         {
-            var subscription = await _repository.GetByIdAsync(id);
+            var subscription = await repository.FindByIdAsync(id);
             return new SubscriptionDto
             {
                 Id = subscription.Id,
@@ -47,7 +37,8 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
         /// <returns> An enumerable list of <see cref="SubscriptionDto"/> objects.</returns>
         public async Task<IEnumerable<SubscriptionDto>> GetAllSubscriptionsAsync()
         {
-            var subscriptions = await _repository.GetAllAsync();
+            var subscriptions = await repository.ListAsync();
+
             return subscriptions.Select(s => new SubscriptionDto
             {
                 Id = s.Id,
@@ -61,7 +52,7 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.QueryServices
 
         public async Task<Subscription> Handle(GetSubscriptionByUserIdQuery query)
         {
-            var subscription = await _repository.GetAllAsync();
+            var subscription = await repository.ListAsync();
             var result = subscription.FirstOrDefault(s => s.UserId == query.UserId);
 
             if (result == null)

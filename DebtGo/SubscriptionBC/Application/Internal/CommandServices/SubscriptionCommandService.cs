@@ -5,30 +5,23 @@ using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
 using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 using DebtGo2.SubscriptionBC.Domain.Model.Events;
 using DebtGo2.SubscriptionBC.Domain.Model.Commands;
+using DebtGo2.SubscriptionBC.Domain.Repositories;
+using DebtGo.Shared.Domain.Repositories;
 
 namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
 {
     /// <summary>
     ///     Implements the command service for subscription management.
     /// </summary>
-    public class SubscriptionCommandService : ISubscriptionCommandService
+    public class SubscriptionCommandService(
+        ISubscriptionRepository repository,
+        IUnitOfWork unitOfWork) : ISubscriptionCommandService
     {
-        private readonly ISubscriptionRepository _repository;
-
-        /// <summary>
-        ///     Initializes a new instance of <see cref="SubscriptionCommandService"/>.
-        /// </summary>
-        /// <param name="repository"> The repository used to manage subscriptions in the database.</param>
-        public SubscriptionCommandService(ISubscriptionRepository repository)
-        {
-            _repository = repository;
-        }
-
         /// <summary>
         ///     Creates a new subscription.
         /// </summary>
         /// <param name="dto"> The subscription data transfer object containing the details of the subscription.</param>
-        public async Task CreateSubscriptionAsync(SubscriptionDto dto)
+       /*  public async Task CreateSubscriptionAsync(SubscriptionDto dto)
         {
             if (!Enum.TryParse<SubscriptionStatus>(dto.Status, out var status))
             {
@@ -44,17 +37,17 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
                 Status = status
             };
 
-            await _repository.AddAsync(subscription);
+            await repository.AddAsync(subscription);
 
             var subscriptionCreatedEvent = new SubscriptionCreatedEvent(
                 subscription.Id, subscription.UserId, subscription.PlanName, subscription.StartDate);
-        }
+        } */
 
         /// <summary>
         ///     Updates an existing subscription.
         /// </summary>
         /// <param name="dto"> The subscription data transfer object with updated details.</param>
-        public async Task UpdateSubscriptionAsync(SubscriptionDto dto)
+       /*  public async Task UpdateSubscriptionAsync(SubscriptionDto dto)
         {
             var subscription = new Subscription
             {
@@ -66,17 +59,17 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
                 Status = Enum.Parse<SubscriptionStatus>(dto.Status)
             };
 
-            await _repository.UpdateAsync(subscription);
-        }
+            await repository.UpdateAsync(subscription);
+        } */
 
         /// <summary>
         ///     Deletes a subscription by its unique identifier.
         /// </summary>
         /// <param name="id"> The unique identifier of the subscription to be deleted.</param>
-        public async Task DeleteSubscriptionAsync(int id)
+        /* public async Task DeleteSubscriptionAsync(int id)
         {
-            await _repository.DeleteAsync(id);
-        }
+            await repository.DeleteAsync(id);
+        } */
 
         public async Task<Subscription> Handle(CreateSubscriptionCommand command)
         {
@@ -85,16 +78,17 @@ namespace DebtGo2.SubscriptionBC.Application.Internal.CommandServices
                 throw new ArgumentException($"Invalid status value: {command.Status}");
             }
 
-            var subscription = new Subscription
-            {
+            var subscription = new Subscription(command);
+            /* {
                 UserId = command.UserId,
                 PlanName = command.PlanId,
                 StartDate = command.StartDate,
                 EndDate = command.EndDate,
                 Status = status
-            };
+            }; */
 
-            await _repository.AddAsync(subscription);
+            await repository.AddAsync(subscription);
+            await unitOfWork.CompleteAsync();
             return subscription; // Retorna la entidad completa
         }
     }
