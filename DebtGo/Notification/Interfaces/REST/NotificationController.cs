@@ -6,9 +6,11 @@ using DebtGo.Notification.Domain.Model.Commands;
 using Microsoft.AspNetCore.Mvc;
 using NotificationsBC.Application.Internal.CommandServices;
 using DebtGo.Notification.Domain.Model.Queries;
+using DebtGo.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 
 namespace NotificationsBC.Interfaces.REST.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -22,6 +24,7 @@ namespace NotificationsBC.Interfaces.REST.Controllers
         /// <param name="resource">Los detalles de la notificaci�n.</param>
         /// <returns>La notificaci�n creada.</returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateNotificationResource resource)
         {
             var command = CreateNotificationCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -35,6 +38,7 @@ namespace NotificationsBC.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetNotification([FromRoute] int id)
         {
             var query = GetNotificationByIdQueryFromResourceAssembler.ToCommandFromResource(id);
@@ -48,6 +52,7 @@ namespace NotificationsBC.Interfaces.REST.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllNotifications()
         {
             var query = new GetAllNotificationsQuery();

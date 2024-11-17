@@ -19,6 +19,11 @@ using DebtGo.Notification.Domain.Repositories;
 using DebtGo.Notification.Domain.Services;
 using DebtGo.Notification.Infrastructure.Persistence.EFC.Repositories;
 using NotificationsBC.Application.Internal.CommandServices;
+using DebtGo2.SubscriptionBC.Domain.Repositories;
+using DebtGo.SubscriptionBC.Domain.Services;
+using DebtGo2.SubscriptionBC.Application.Internal.QueryServices;
+using DebtGo2.SubscriptionBC.Application.Internal.CommandServices;
+using DebtGo2.SubscriptionBC.Infrastructure.Persistence.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,7 +120,25 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 // TokenSettings Configuration
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 
+// Notification Bounded Context Injection Configuration
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
+
+// Subscription Bounded Context Injection Configuration
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<ISubscriptionCommandService, SubscriptionCommandService>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
+
 var app = builder.Build();
+
+// Verify Database Objects are created
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    context.Database.EnsureCreated();
+}
 
 // Verify Database Objects are created
 using (var scope = app.Services.CreateScope())
@@ -127,10 +150,13 @@ using (var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
 app.UseCors("AllowAllPolicy");
 
@@ -138,9 +164,11 @@ app.UseCors("AllowAllPolicy");
 app.UseRequestAuthorization();
 
 app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapControllers();
 app.MapControllers();
 
 app.Run();

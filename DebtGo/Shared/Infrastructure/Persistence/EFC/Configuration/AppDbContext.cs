@@ -1,6 +1,7 @@
 using DebtGo.IAM.Domain.Model.Aggregates;
 using DebtGo.IAM.Domain.Model.Entities;
 using DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using DebtGo2.SubscriptionBC.Domain.Model.Aggregates;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using NotificationAgg = DebtGo.Notification.Domain.Model.Aggregates.Notification;
@@ -47,6 +48,23 @@ namespace DebtGo.Shared.Infrastructure.Persistence.EFC.Configuration
             });
             modelBuilder.Entity<NotificationAgg>().Property(n => n.Type).IsRequired().HasConversion<string>();
             modelBuilder.Entity<NotificationAgg>().Property(n => n.Status).IsRequired().HasConversion<string>();
+
+            modelBuilder.Entity<Subscription>(entity =>
+                      {
+                          entity.HasKey(e => e.Id);
+
+                          entity.Property(e => e.UserId)
+                              .IsRequired()
+                              .HasMaxLength(50);
+
+                          entity.Property(e => e.PlanName)
+                              .HasMaxLength(100);
+
+                          entity.Property(e => e.Status)
+                              .IsRequired()
+                              .HasConversion<string>();
+                      });
+
 
             modelBuilder.UseSnakeCaseNamingConvention();
         }
