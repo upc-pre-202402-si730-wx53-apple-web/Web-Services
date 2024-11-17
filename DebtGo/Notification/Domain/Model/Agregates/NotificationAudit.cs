@@ -3,8 +3,8 @@ using EntityFrameworkCore.CreatedUpdatedDate.Contracts;
 
 namespace DebtGo.Notification.Domain.Model.Aggregates;
 
-public class NotificationAudit : IEntityWithCreatedUpdatedDate
+public partial class Notification : IEntityWithCreatedUpdatedDate
 {
     [Column("CreatedAt")] public DateTimeOffset? CreatedDate { get; set; }
-    [Column("UpdateAt")] public DateTimeOffset? UpdateDate { get; set; }
+    [Column("UpdatedAt")] public DateTimeOffset? UpdatedDate { get; set; }
 }
