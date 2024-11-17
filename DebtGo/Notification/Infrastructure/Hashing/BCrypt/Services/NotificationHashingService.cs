@@ -1,14 +1,21 @@
-namespace DebtGo.Notification.Infrastructure.Hashing.BCrypt.Services;
+using System.Security.Cryptography;
+using System.Text;
 
-public class NotificationHashingService
+namespace NotificationsBC.Infrastructure.Hashing.Services
 {
-    public string Hash(string data)
+    public class NotificationHashingService
     {
-        return BCrypt.Net.BCrypt.HashPassword(data);
-    }
+        public string Hash(string data)
+        {
+            using var sha256 = SHA256.Create();
+            byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(data));
+            return Convert.ToBase64String(hashedBytes);
+        }
 
-    public bool Verify(string data, string hashedData)
-    {
-        return BCrypt.Net.BCrypt.Verify(data, hashedData);
+        public bool Verify(string data, string hashedData)
+        {
+            string hashedInput = Hash(data);
+            return hashedInput == hashedData;
+        }
     }
 }

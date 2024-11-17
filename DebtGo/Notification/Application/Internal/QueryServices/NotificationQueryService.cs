@@ -1,24 +1,25 @@
 using DebtGo.Notification.Domain.Model.Aggregates;
 using DebtGo.Notification.Domain.Model.Queries;
 using DebtGo.Notification.Domain.Repositories;
-using DebtGo.Notification.Domain.Services;
+using NotificationsBC.Application.Internal.QueryServices;
 
 namespace DebtGo.Notification.Application.Internal.QueryServices;
 
-public class NotificationQueryService(INotificationRepository notificationRepository) : INotificationQueryService
+public class NotificationQueryService : INotificationQueryService
 {
-    public async Task<IEnumerable<Notification>> Handle(GetAllNotificationsQuery query)
+    private readonly INotificationRepository _notificationRepository;
+
+    public NotificationQueryService(INotificationRepository notificationRepository)
     {
-        return await notificationRepository.ListAsync();
+        _notificationRepository = notificationRepository;
     }
 
-    public async Task<Notification?> Handle(GetNotificationByIdQuery query)
-    {
-        return await notificationRepository.FindByIdAsync(query.NotificationId);
-    }
+    public async Task<IEnumerable<NotificationAudit>> Handle(GetAllNotificationsQuery query) =>
+        await _notificationRepository.ListAsync();
 
-    public async Task<IEnumerable<Notification>> Handle(GetNotificationsByUserQuery query)
-    {
-        return await notificationRepository.FindByUserIdAsync(query.UserId);
-    }
+    public async Task<NotificationAudit?> Handle(GetNotificationByIdQuery query) =>
+        await _notificationRepository.FindByIdAsync(query.NotificationId);
+
+    public async Task<IEnumerable<NotificationAudit>> Handle(GetNotificationsByUserQuery query) =>
+        await _notificationRepository.FindByUserIdAsync(query.UserId);
 }

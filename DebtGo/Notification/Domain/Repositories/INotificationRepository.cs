@@ -1,12 +1,12 @@
-using DebtGo.Shared.Domain.Repositories;
 using DebtGo.Notification.Domain.Model.Aggregates;
-using DebtGo.Notification.Domain.Model.ValueObjects;
 
 namespace DebtGo.Notification.Domain.Repositories;
 
-public interface INotificationRepository : IBaseRepository<Notification>
+public interface INotificationRepository
 {
-    Task<IEnumerable<Notification>> GetNotificationsByRecipientAsync(NotificationRecipient recipient);
-    Task<IEnumerable<Notification>> GetNotificationsByTypeAsync(NotificationType type);
-    Task<IEnumerable<Notification>> GetNotificationsByCategoryAsync(NotificationCategory category);
+    Task AddAsync(NotificationAudit notification);
+    Task AddAsync(Model.Aggregates.Notification notification);
+    Task<NotificationAudit?> FindByIdAsync(int id);
+    Task<IEnumerable<NotificationAudit>> FindByUserIdAsync(int userId);
+    Task<IEnumerable<NotificationAudit>> ListAsync();
 }

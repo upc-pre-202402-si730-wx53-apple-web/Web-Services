@@ -1,8 +1,3 @@
-namespace DebtGo.Notification.Domain.Model.ValueObjects;
+namespace NotificationsBC.Domain.ValueObjects;
 
-public record NotificationContent(string Content)
-{
-    public NotificationContent() : this(string.Empty) { }
-
-    public string Summary => Content.Length <= 50 ? Content : Content.Substring(0, 50) + "...";
-}
+public record NotificationContent(string Content);

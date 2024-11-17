@@ -1,26 +1,24 @@
 using DebtGo.Notification.Domain.Model.Aggregates;
-using DebtGo.Notification.Interfaces.REST.Resources;
 
-namespace DebtGo.Notification.Interfaces.REST.Transform
+namespace NotificationsBC.Interfaces.REST.Transform;
+
+public class NotificationResourceFromEntityAssembler
 {
-    public class NotificationResourceFromEntityAssembler
+    public CreateNotificationResource ToResource(Notification notification)
     {
-        public NotificationResource ToResource(Notification notification)
+        return new CreateNotificationResource
         {
-            return new NotificationResource
-            {
-                Id = notification.Id,
-                Content = notification.Content.Content,
-                RecipientAddress = notification.Recipient.RecipientAddress,
-                Type = notification.Type.ToString(),
-                Category = notification.Category.ToString(),
-                CreatedAt = notification.CreatedDate
-            };
-        }
+            Id = notification.Id,
+            Content = notification.Content,
+            RecipientAddress = notification.RecipientAddress,
+            Type = notification.Type.ToString(),
+            Category = notification.Category.ToString(),
+            CreatedAt = notification.CreatedDate
+        };
+    }
 
-        public IEnumerable<NotificationResource> ToResourceList(IEnumerable<Notification> notifications)
-        {
-            return notifications.Select(ToResource);
-        }
+    public IEnumerable<CreateNotificationResource> ToResourceList(IEnumerable<Notification> notifications)
+    {
+        return notifications.Select(ToResource);
     }
 }
